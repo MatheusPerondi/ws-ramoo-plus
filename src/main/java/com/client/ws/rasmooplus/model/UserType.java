@@ -1,9 +1,16 @@
 package com.client.ws.rasmooplus.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "user_type")
 public class UserType implements Serializable {
@@ -11,39 +18,9 @@ public class UserType implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_type_id")
     private Long id;
+
     private String name;
+
     private String description;
 
-    public UserType(Long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    public UserType() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
