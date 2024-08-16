@@ -13,12 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "subscription_type")
+@Table(name = "subscriptions_type")
 public class SubscriptionType implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "subscription_type_id")
+    @Column(name = "subscriptions_type_id")
     private Long id;
 
     private String name;
