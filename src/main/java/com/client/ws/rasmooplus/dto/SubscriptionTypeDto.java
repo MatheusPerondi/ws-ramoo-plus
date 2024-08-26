@@ -21,6 +21,5 @@ public class SubscriptionTypeDto {
 
     private BigDecimal price;
 
-
     private String productKey;
 }
