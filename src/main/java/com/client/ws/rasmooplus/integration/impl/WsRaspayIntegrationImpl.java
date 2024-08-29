@@ -32,7 +32,7 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
             HttpEntity<CustomerDto> request = new HttpEntity<>(dto, this.headers);
             ResponseEntity<CustomerDto> response =
-                    restTemplate.exchange("https://raspay-api-61f5fa5fc34c.herokuapp.com/ws-raspay/v1/customer", HttpMethod.POST, request, CustomerDto.class);
+                    restTemplate.exchange("http://localhost:8081/ws-raspay/v1/customer", HttpMethod.POST, request, CustomerDto.class);
             return response.getBody();
         } catch (Exception e){
             throw e;
@@ -45,7 +45,7 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
         try{
             HttpEntity<OrderDto> request = new HttpEntity<>(dto, this.headers);
             ResponseEntity<OrderDto> response =
-                    restTemplate.exchange("https://raspay-api-61f5fa5fc34c.herokuapp.com/ws-raspay/v1/order", HttpMethod.POST, request, OrderDto.class);
+                    restTemplate.exchange("http://localhost:8081/ws-raspay/v1/order", HttpMethod.POST, request, OrderDto.class);
             return response.getBody();
         } catch (Exception e){
             throw e;
@@ -53,8 +53,15 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
     }
 
     @Override
-    public Boolean processPayment(PaymentDto paymentDto) {
-        return null;
+    public Boolean processPayment(PaymentDto dto) {
+        try{
+            HttpEntity<PaymentDto> request = new HttpEntity<>(dto, this.headers);
+            ResponseEntity<Boolean> response =
+                    restTemplate.exchange("http://localhost:8081/ws-raspay/v1/payment/credit-card/", HttpMethod.POST, request, Boolean.class);
+            return response.getBody();
+        } catch (Exception e){
+            throw e;
+        }
     }
 
     private static HttpHeaders getHttpHeaders() {
