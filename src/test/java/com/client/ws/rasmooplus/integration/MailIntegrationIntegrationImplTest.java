@@ -17,7 +17,8 @@ class MailIntegrationIntegrationImplTest {
 
     @Test
     void createCustomerWhenDtoOk(){
-        mailIntegration.send("matheusperondidevapi@gmail.com", "OLA MATHEUSINHO TURO BOM!");
+        mailIntegration.send(
+                "matheusperondidevapi@gmail.com", "OLA MATHEUSINHO TURO BOM!", "BIRULEIBE");
     }
 
 

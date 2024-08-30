@@ -41,7 +41,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     }
     @Override
     public Boolean process(PaymentProcessDto dto) {
-        var userOpt = userRepository.findById(dto.getUserPaymentInfoDto().getId());
+        var userOpt = userRepository.findById(dto.getUserPaymentInfoDto().getUserId());
         if (userOpt.isEmpty()){
             throw new NotFoundException("Usuario não encontrado");
         }
@@ -57,13 +57,15 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         PaymentDto paymentDto = PaymentMapper.build(customer.getId(), orderDto.getId(), CreditCardMapper.build(dto.getUserPaymentInfoDto(), user.getCpf()));
         Boolean sucessPayment = wsRaspayIntegration.processPayment(paymentDto);
 
-        if (sucessPayment){
+        if (Boolean.TRUE.equals(sucessPayment)){
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
             userPaymentInfoRepository.save(userPaymentInfo);
             mailIntegration.send(user.getEmail(), "Usuario: "+ user.getEmail() +" - Senha: alunorasmoo", "Acesso Liberado");
+
+            return true;
         }
 
 
-        return null;
+        return false;
     }
 }
