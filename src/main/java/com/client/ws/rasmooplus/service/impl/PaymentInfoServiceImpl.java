@@ -3,7 +3,10 @@ package com.client.ws.rasmooplus.service.impl;
 import com.client.ws.rasmooplus.dto.PaymentProcessDto;
 import com.client.ws.rasmooplus.exception.BusinessException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
+import com.client.ws.rasmooplus.mapper.UserPaymentInfoMapper;
 import com.client.ws.rasmooplus.model.User;
+import com.client.ws.rasmooplus.model.UserPaymentInfo;
+import com.client.ws.rasmooplus.repository.UserPaymentInfoRepository;
 import com.client.ws.rasmooplus.repository.UserRepository;
 import com.client.ws.rasmooplus.service.PaymentInfoService;
 import org.springframework.stereotype.Service;
@@ -15,8 +18,11 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     private final UserRepository userRepository;
 
-    PaymentInfoServiceImpl(UserRepository userRepository){
+    private final UserPaymentInfoRepository userPaymentInfoRepository;
+
+    PaymentInfoServiceImpl(UserRepository userRepository, UserPaymentInfoRepository userPaymentInfoRepository){
         this.userRepository = userRepository;
+        this.userPaymentInfoRepository = userPaymentInfoRepository;
     }
     @Override
     public Boolean process(PaymentProcessDto dto) {
@@ -29,6 +35,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             throw new BusinessException("Pagamento não pode ser processado pois o usuario ja possui assinatura");
         }
 
+        UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
+        userPaymentInfoRepository.save(userPaymentInfo);
         return null;
     }
 }
