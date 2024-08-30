@@ -3,12 +3,15 @@ package com.client.ws.rasmooplus.service.impl;
 import com.client.ws.rasmooplus.dto.PaymentProcessDto;
 import com.client.ws.rasmooplus.dto.wsraspay.CustomerDto;
 import com.client.ws.rasmooplus.dto.wsraspay.OrderDto;
+import com.client.ws.rasmooplus.dto.wsraspay.PaymentDto;
 import com.client.ws.rasmooplus.exception.BusinessException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
 import com.client.ws.rasmooplus.integration.WsRaspayIntegration;
 import com.client.ws.rasmooplus.mapper.UserPaymentInfoMapper;
+import com.client.ws.rasmooplus.mapper.wsraspay.CreditCardMapper;
 import com.client.ws.rasmooplus.mapper.wsraspay.CustomerMapper;
 import com.client.ws.rasmooplus.mapper.wsraspay.OrderMapper;
+import com.client.ws.rasmooplus.mapper.wsraspay.PaymentMapper;
 import com.client.ws.rasmooplus.model.User;
 import com.client.ws.rasmooplus.model.UserPaymentInfo;
 import com.client.ws.rasmooplus.repository.UserPaymentInfoRepository;
@@ -47,8 +50,15 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
         OrderDto orderDto = wsRaspayIntegration.createOrder(OrderMapper.build(customer.getId(), dto));
 
-        UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
-        userPaymentInfoRepository.save(userPaymentInfo);
+        PaymentDto paymentDto = PaymentMapper.build(customer.getId(), orderDto.getId(), CreditCardMapper.build(dto.getUserPaymentInfoDto(), user.getCpf()));
+        Boolean sucessPayment = wsRaspayIntegration.processPayment(paymentDto);
+
+        if (sucessPayment){
+            UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
+            userPaymentInfoRepository.save(userPaymentInfo);
+        }
+
+
         return null;
     }
 }
